@@ -1,5 +1,5 @@
 {
-	"name": "ESP32S3Watch ESP-IDF",
+	"name": "ESP32WatchApp ESP-IDF",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},

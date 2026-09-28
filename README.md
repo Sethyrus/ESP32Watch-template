@@ -1,54 +1,40 @@
-# ESP32S3Watch
+# ESP32Watch-template
 
-Firmware ESP-IDF para la placa Waveshare `ESP32-S3-Touch-AMOLED-2.06`.
+Plantilla para crear firmwares nuevos para la Waveshare **ESP32-S3-Touch-AMOLED-2.06** con `ESP-IDF 5.5.4` + `LVGL 9` + BSP oficial de Waveshare.
 
-La base del proyecto usa `ESP-IDF 5.5.4`, `LVGL` y el BSP oficial de Waveshare. No usa ESP-Brookesia por defecto: el objetivo es tener una base simple, estable y directa para validar pantalla, touch, brillo y perifericos antes de construir una capa de apps mas compleja.
+Incluye una pantalla de prueba (LVGL + BSP), la configuracion de la placa (`sdkconfig.defaults`, `partitions.csv`) y la dependencia a [ESP32Watch-core](https://github.com/Sethyrus/ESP32Watch-core) (`watch_board`: IMU y botones).
 
-La rama `app/doom` reemplaza ese bootstrap por un firmware standalone de Doom; sus decisiones especificas estan documentadas en `docs/DOOM_PORT.md`.
+## Crear una app nueva desde esta plantilla
 
-## Hardware Objetivo
+1. En GitHub, **Use this template** > **Create a new repository** (por ejemplo `ESP32Watch-MiApp`), y clonarlo.
+2. Cambiar el nombre del proyecto en `CMakeLists.txt` (`project(ESP32WatchApp)`) y en `.devcontainer/devcontainer.json`.
+3. Reescribir este README y `AGENTS.md` para la app.
+4. Poner la logica en componentes bajo `components/` y dejar `main/main.c` como arranque.
+5. Para usar IMU o botones: `REQUIRES watch_board` en el `CMakeLists.txt` del componente e incluir `imu_service.h` / `watch_buttons.h`.
+6. Si la app necesita otra tabla de particiones o Kconfig, cambiarlo en `partitions.csv` / `sdkconfig.defaults` (nunca solo en `sdkconfig`).
 
-- Placa: Waveshare `ESP32-S3-Touch-AMOLED-2.06`.
-- MCU: `ESP32-S3R8`, dual-core LX7 hasta 240 MHz.
-- PSRAM: 8 MB octal.
-- Flash: el esquematico monta `GD25Q256EYIGR` de 32 MB; el baseline usa config de 16 MB hasta validar la placa real.
-- Pantalla: AMOLED 2.06", 410 x 502, QSPI.
-- Touch: `FT3168` por I2C, driver BSP `esp_lcd_touch_ft5x06`.
-- IMU: `QMI8658` por I2C.
-- RTC: `PCF85063` por I2C.
-- PMU/bateria: `AXP2101` por I2C.
-- Audio: codec/speaker `ES8311`, doble microfono via ADC `ES7210`, I2S.
-- Storage: microSD por SDMMC 1-bit.
+El repo nuevo es una copia independiente: los cambios posteriores en esta plantilla no le llegan. Lo que se deba compartir entre apps va a ESP32Watch-core.
 
-Ver detalles en `docs/HARDWARE.md`.
-
-## Quick Start
+## Compilar y flashear
 
 ```sh
-source "/Users/alex/.espressif/v5.5.4/esp-idf/export.sh"
+source "$HOME/.espressif/v5.5.4/esp-idf/export.sh"
 idf.py set-target esp32s3
 idf.py build
 idf.py -p /dev/tty.usbmodem21301 flash monitor
 ```
 
-Si el shell no encuentra `idf.py`, falta ejecutar el `source` anterior o el entorno de ESP-IDF no esta instalado completo.
+Debe aparecer una tarjeta "ESP32S3Watch / LVGL + Waveshare BSP" en la pantalla.
 
-## Estructura
+## Documentacion
 
-- `main/main.c`: entrada `app_main()`; el bootstrap concreto puede variar por rama.
-- `main/idf_component.yml`: dependencias del componente principal.
-- `sdkconfig.defaults`: configuracion durable del proyecto.
-- `partitions.csv`: tabla de particiones durable.
-- `docs/HARDWARE.md`: sensores, pines, buses y APIs.
-- `docs/SETUP.md`: entorno ESP-IDF y flujo de build/flash.
-- `docs/GOTCHAS.md`: problemas conocidos y decisiones criticas.
-- `docs/ARCHITECTURE.md`: arquitectura base y criterio Brookesia vs LVGL+BSP.
-- `docs/DOOM_PORT.md`: investigacion, viabilidad y plan del port de Doom en la rama `app/doom`.
-- `docs/MAZE_DESIGN.md`: diseno del juego de laberinto en la rama `app/maze`.
-- `docs/BRINGUP.md`: checklist de validacion hardware antes de construir apps.
-- `docs/SOURCES.md`: fuentes oficiales, datasheets, componentes y ejemplos usados.
-- `AGENTS.md`: instrucciones resumidas para agentes.
+La documentacion de hardware y entorno esta en [ESP32Watch-core/docs](https://github.com/Sethyrus/ESP32Watch-core/tree/main/docs): hardware y pines, setup de ESP-IDF, gotchas, arquitectura y bring-up.
 
-## Estado Actual
+## Apps hechas con esta base
 
-La rama base arranca el BSP, inicializa LVGL, enciende la pantalla y muestra una pantalla de prueba. La rama `app/doom` arranca Doom standalone, busca un WAD legal aportado por el usuario y no usa LVGL en runtime; ver `docs/DOOM_PORT.md` para el estado detallado.
+- [ESP32Watch-Maze](https://github.com/Sethyrus/ESP32Watch-Maze): laberinto con IMU.
+- [ESP32Watch-Doom](https://github.com/Sethyrus/ESP32Watch-Doom): port de Doom.
+
+## Licencia
+
+MIT. Ver [LICENSE](LICENSE). Una app creada desde la plantilla puede usar la licencia que necesite.
