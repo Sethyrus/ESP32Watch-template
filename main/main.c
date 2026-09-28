@@ -5,7 +5,7 @@
 #include "bsp/display.h"
 #include "lvgl.h"
 
-static const char *TAG = "ESP32S3Watch";
+static const char *TAG = "ESP32WatchApp";
 
 static void create_demo_ui(void)
 {
