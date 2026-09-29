@@ -12,7 +12,7 @@
 - Source ESP-IDF: `source "$HOME/.espressif/v5.5.4/esp-idf/export.sh"`.
 - First setup or fresh config: `idf.py set-target esp32s3`.
 - Build/primary verification: `idf.py build`.
-- Flash and monitor: `idf.py -p /dev/tty.usbmodem21301 flash monitor`.
+- Flash and monitor: `idf.py -p <PORT> flash monitor` (macOS port looks like `/dev/tty.usbmodem*` and changes with the USB socket; `idf.py` auto-detects it if `-p` is omitted).
 - No repo-local test, lint, or format targets are configured; do not invent npm/PlatformIO/pytest commands.
 
 ## Hardware And BSP Notes

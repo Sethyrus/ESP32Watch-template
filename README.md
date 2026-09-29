@@ -21,7 +21,7 @@ El repo nuevo es una copia independiente: los cambios posteriores en esta planti
 source "$HOME/.espressif/v5.5.4/esp-idf/export.sh"
 idf.py set-target esp32s3
 idf.py build
-idf.py -p /dev/tty.usbmodem21301 flash monitor
+idf.py -p <PORT> flash monitor   # p. ej. /dev/tty.usbmodem1101; sin -p lo autodetecta
 ```
 
 Debe aparecer una tarjeta "ESP32S3Watch / LVGL + Waveshare BSP" en la pantalla.
