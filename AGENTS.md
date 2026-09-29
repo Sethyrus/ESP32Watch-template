@@ -22,6 +22,7 @@
 - LVGL is not thread-safe. Wrap all `lv_*` calls made outside LVGL callbacks/tasks with `bsp_display_lock()` and `bsp_display_unlock()`.
 - Reuse `bsp_i2c_get_handle()` for devices on the shared I2C bus; do not create a second master bus on the same port.
 - BOOT is GPIO0, active low. PWR is not a GPIO: it goes to AXP2101 `PWRON` (short press via `watch_pwr_key_take_short_press()`); holding it ~6 s powers off the board.
+- Button convention: BOOT = accept/primary action, PWR short press = back/menu. See "Convencion De Botones" in core `docs/ARCHITECTURE.md`.
 - For microSD use BSP SDMMC 1-bit (`CLK GPIO2`, `CMD GPIO1`, `D0 GPIO3`). `GPIO17` appears only in Arduino SPI-style SD examples.
 - QMI8658 accel is milli-g; `imu_service` already maps axes as `screen_x = -accelY / 1000`, `screen_y = accelX / 1000`.
 - Schematic-only pins not wrapped by BSP include motor `GPIO18`, QMI INT `GPIO21`, RTC INT `GPIO39`, LCD TE `GPIO13`, `SYS_OUT/GPIO10`; verify before use.
