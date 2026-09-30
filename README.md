@@ -43,6 +43,7 @@ La documentacion de hardware y entorno esta en [ESP32Watch-core/docs](https://gi
 - [ESP32Watch-Maze](https://github.com/Sethyrus/ESP32Watch-Maze): laberinto con IMU.
 - [ESP32Watch-Doom](https://github.com/Sethyrus/ESP32Watch-Doom): port de Doom.
 - [ESP32Watch-Fluid](https://github.com/Sethyrus/ESP32Watch-Fluid): simulacion de fluido con la IMU.
+- [ESP32Watch-Recorder](https://github.com/Sethyrus/ESP32Watch-Recorder): grabadora de voz con microfono y microSD.
 - [ESP32Watch-Launcher](https://github.com/Sethyrus/ESP32Watch-Launcher): launcher para tenerlas todas grabadas a la vez.
 
 ## Licencia
