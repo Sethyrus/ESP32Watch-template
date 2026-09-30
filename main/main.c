@@ -1,9 +1,15 @@
+#include <stdbool.h>
+
 #include "esp_err.h"
 #include "esp_log.h"
 
 #include "bsp/esp-bsp.h"
 #include "bsp/display.h"
 #include "lvgl.h"
+#include "watch_buttons.h"
+#include "watch_launcher.h"
+
+#define PWR_POLL_MS 50
 
 static const char *TAG = "ESP32WatchApp";
 
@@ -49,7 +55,7 @@ static void create_demo_ui(void)
     lv_obj_align(details, LV_ALIGN_CENTER, 0, 22);
 
     lv_obj_t *footer = lv_label_create(screen);
-    lv_label_set_text(footer, "Baseline hardware check");
+    lv_label_set_text(footer, watch_launcher_is_available() ? "PWR: volver al launcher" : "Baseline hardware check");
     lv_obj_set_style_text_color(footer, lv_color_hex(0x94a3b8), LV_PART_MAIN);
 #if LV_FONT_MONTSERRAT_16
     lv_obj_set_style_text_font(footer, &lv_font_montserrat_16, LV_PART_MAIN);
@@ -57,8 +63,22 @@ static void create_demo_ui(void)
     lv_obj_align(footer, LV_ALIGN_BOTTOM_MID, 0, -42);
 }
 
+// Button convention (core docs/ARCHITECTURE.md): PWR at the app root returns to the
+// launcher when started from it. PWR comes over I2C, so it is polled, not read per frame.
+static void pwr_timer_cb(lv_timer_t *timer)
+{
+    (void)timer;
+    bool pressed = false;
+    if (watch_pwr_key_take_short_press(&pressed) == ESP_OK && pressed) {
+        watch_launcher_exit();
+    }
+}
+
 void app_main(void)
 {
+    // Launcher mode: first thing, so any reset from here on returns to the launcher.
+    watch_launcher_boot_once();
+
     ESP_LOGI(TAG, "Starting LVGL BSP demo");
 
     lv_display_t *display = bsp_display_start();
@@ -78,6 +98,14 @@ void app_main(void)
     }
 
     create_demo_ui();
+    if (watch_launcher_is_available()) {
+        err = watch_pwr_key_init();
+        if (err == ESP_OK) {
+            lv_timer_create(pwr_timer_cb, PWR_POLL_MS, NULL);
+        } else {
+            ESP_LOGW(TAG, "PWR key unavailable: %s", esp_err_to_name(err));
+        }
+    }
 
     bsp_display_unlock();
 

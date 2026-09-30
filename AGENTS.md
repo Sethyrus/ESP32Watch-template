@@ -4,8 +4,10 @@
 - ESP-IDF C firmware template `ESP32WatchApp`; the app entrypoint is `app_main()` in `main/main.c` (LVGL + BSP demo screen).
 - Target hardware is Waveshare `ESP32-S3-Touch-AMOLED-2.06` with ESP32-S3R8, AMOLED 410x502 QSPI, FT3168 touch, QMI8658 IMU, PCF85063 RTC, AXP2101 PMU, ES8311 speaker, ES7210 dual-mic ADC, and microSD.
 - Baseline stack is `ESP-IDF 5.5.4 + LVGL 9 + waveshare/esp32_s3_touch_amoled_2_06` BSP. Do not migrate to ESP-IDF 6.x or ESP-Brookesia unless explicitly requested.
-- Shared board services (`imu_service.h`, `watch_buttons.h`) come from `watch_board` in https://github.com/Sethyrus/ESP32Watch-core, pinned by tag in `main/idf_component.yml`. Hardware docs live in that repo's `docs/`.
+- Shared board services (`imu_service.h`, `watch_buttons.h`, `watch_rtc.h`, `watch_nvs.h`, `watch_launcher.h`) come from `watch_board` in https://github.com/Sethyrus/ESP32Watch-core, pinned by tag in `main/idf_component.yml`. Hardware docs live in that repo's `docs/`.
 - Keep `main` small. Add new `main` sources in `main/CMakeLists.txt`, or create ESP-IDF components for reusable code.
+- Launcher mode: `watch_launcher_boot_once()` stays first in `app_main`; offer exit (`watch_launcher_exit()`) only when `watch_launcher_is_available()`. NVS is shared by every app: init it with `watch_nvs_init()`, use an own namespace, never erase it.
+- `partitions.csv` is the shared layout owned by ESP32Watch-Launcher; do not change offsets here.
 - Durable project config lives in `sdkconfig.defaults`, `partitions.csv`, component manifests and `dependencies.lock`. `sdkconfig`, `build/`, and `managed_components/` are generated/local.
 
 ## Commands
