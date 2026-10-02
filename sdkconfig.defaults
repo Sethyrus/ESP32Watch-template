@@ -21,6 +21,8 @@ CONFIG_SPIRAM_FETCH_INSTRUCTIONS=y
 CONFIG_SPIRAM_RODATA=y
 CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=4096
 CONFIG_SPIRAM_MALLOC_RESERVE_INTERNAL=4096
+# Skip the PSRAM test: ~260 ms on every boot, paid on each launcher app switch.
+CONFIG_SPIRAM_MEMTEST=n
 CONFIG_ESP32S3_DATA_CACHE_LINE_64B=y
 
 CONFIG_FREERTOS_HZ=1000
@@ -34,9 +36,13 @@ CONFIG_BSP_SPIFFS_MOUNT_POINT="/spiffs"
 CONFIG_BSP_SPIFFS_PARTITION_LABEL="spiffs"
 CONFIG_BSP_SPIFFS_MAX_FILES=2
 CONFIG_BSP_SD_MOUNT_POINT="/sdcard"
+# The two below only apply to bsp_display_start(), which apps do not use (watch_display_start()
+# sets its own buffer); kept so a clean sdkconfig matches the BSP defaults.
 CONFIG_BSP_LCD_RGB_BOUNCE_BUFFER_HEIGHT=20
 CONFIG_BSP_DISPLAY_LVGL_BUF_HEIGHT=100
 CONFIG_BSP_I2S_NUM=1
+# Long file names on the microSD (the BSP warns otherwise; core docs/GOTCHAS.md).
+CONFIG_FATFS_LFN_HEAP=y
 
 # LVGL 9 baseline.
 CONFIG_LV_USE_CLIB_MALLOC=y
