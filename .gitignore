@@ -26,6 +26,7 @@ eim_config.toml
 
 # Agent skills are installed locally from skills-lock.json
 .agents/
+.claude/
 
 # Local editor config (ESP-IDF extension writes absolute paths here)
 .vscode/
